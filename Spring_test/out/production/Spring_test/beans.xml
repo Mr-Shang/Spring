@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--添加schema-->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <!--创建如下bean等于完成了：HelloWorld helloworld=new Hello World-->
+    <bean id="helloworld" class="com.zttc.spring.medol.HelloWorld" scope="prototype"/>
+    <bean id="userDao" class="com.zttc.spring.dao.UserDao"/>
+    <bean id="user" class="com.zttc.spring.medol.User">
+        <property name="id" value="1"/>
+        <property name="name" value="喈喈"/>
+    </bean>
+
+    <!--autowire="default"  （错误的）
+
+    表示不自动注入 byname表示自动注入（根据name）-->
+    <bean id="userService" class="com.zttc.spring.service.UserService" autowire="byName">
+        <!--name中2的值会在userService对象中调用setXXX方法来注入，name=“userDao”，
+        在具体注入时会调用setUserDao（IUserDao userDao）来完成注入-->
+        <!--ref=userDao 表示配置文件中的bean中所创建的DAO的id-->
+        <property name="userDao" ref="userDao"/>
+
+    </bean>
+    <!--对于userAction而言，里面的属性状态会根据不同的线程得到的不同的值，所以应使用后多例-->
+    <bean id="userAction" class="com.zttc.spring.action.UserAction" scope="prototype">
+        <property name="userService" ref="userService"/>
+        <property name="user" ref="user"/>
+        <property name="id" value="2"/>
+
+        <!--注入列表-->
+        <!--<property name="name">-->
+            <!--<list>-->
+                <!--<value></value>-->
+            <!--</list>-->
+        <!--</property>-->
+    </bean>
+
+    <!--使用构造函数-->
+    <!--<bean id="userAction" class="com.zttc.spring.action.UserAction" scope="prototype">-->
+        <!--<constructor-arg ref="userService"/>-->
+        <!--&lt;!&ndash;<constructor-arg&ndash;&gt;-->
+    <!--</bean>-->
+</beans>
